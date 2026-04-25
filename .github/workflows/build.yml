@@ -9,22 +9,31 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Debug - List directory structure
+      - name: Debug - List all files
         run: |
-          echo "=== Root directory ==="
+          echo "=== Current directory ==="
+          pwd
+          echo "=== Root directory contents ==="
           ls -la
-          echo "=== cmd/frpc directory (if exists) ==="
-          ls -la cmd/frpc || echo "cmd/frpc not found"
+          echo "=== Check cmd directory ==="
+          ls -la cmd || echo "cmd directory not found"
+          echo "=== Check cmd/frpc directory ==="
+          ls -la cmd/frpc || echo "cmd/frpc directory not found"
 
-      - uses: actions/setup-go@v5
+      - name: Setup Go
+        uses: actions/setup-go@v5
         with:
           go-version: '1.21'
 
       - name: Build frpc for iOS arm64
         run: |
-          cd cmd/frpc
-          GOOS=ios GOARCH=arm64 CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o frpc
-          cd ../../
-          mv cmd/frpc/frpc .
+          GOOS=ios GOARCH=arm64 CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o frpc ./cmd/frpc
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frpc-ios-arm64
+          path: frpc
