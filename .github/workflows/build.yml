@@ -1,0 +1,14 @@
+name: Build FRP Client for iOS on: push: branches: [ main ] workflow_dispatch: # 允许手动触发 jobs: 
+  build:
+    runs-on: macos-latest # 编译环境，iOS开发通常需要macOS steps: - name: Checkout code uses: 
+        actions/checkout@v4
+      - name: Setup Go environment uses: actions/setup-go@v5 with: go-version: '1.21' # 
+          建议使用较新版本
+      - name: Compile frpc for iOS run: |
+          # 进入源码目录（将 frp 源码放在仓库根目录或此处拉取）
+          cd frp
+          # 关键：设置交叉编译环境变量
+          GO111MODULE=on GOOS=ios GOARCH=arm64 CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o 
+          frpc ./cmd/frpc ls -lh frpc
+      - name: Upload artifact uses: actions/upload-artifact@v4 with: name: frpc_ios_arm64
+          path: frp/frpc
