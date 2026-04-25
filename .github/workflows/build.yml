@@ -14,11 +14,13 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.21'
-
+          
       - name: Build frpc for iOS arm64
-        run: |
-          GOOS=ios GOARCH=arm64 CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o frpc ./cmd/frpc
-
+       run: |
+                cd cmd/frpc
+                GOOS=ios GOARCH=arm64 CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o frpc
+                cd ../../
+                mv cmd/frpc/frpc .
       - uses: actions/upload-artifact@v4
         with:
           name: frpc-ios-arm64
