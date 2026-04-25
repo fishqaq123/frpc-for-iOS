@@ -11,6 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Debug - List directory structure
+        run: |
+          echo "=== Root directory ==="
+          ls -la
+          echo "=== cmd/frpc directory (if exists) ==="
+          ls -la cmd/frpc || echo "cmd/frpc not found"
+
       - uses: actions/setup-go@v5
         with:
           go-version: '1.21'
@@ -21,8 +28,3 @@ jobs:
           GOOS=ios GOARCH=arm64 CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o frpc
           cd ../../
           mv cmd/frpc/frpc .
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: frpc-ios-arm64
-          path: frpc
