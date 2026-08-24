@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -15,7 +15,7 @@ jobs:
 
       - name: Build frpc
         run: |
-          GOOS=ios GOARCH=arm64 CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o frpc ./cmd/frpc
+          GOOS=ios GOARCH=arm64 CGO_ENABLED=1 go build -trimpath -ldflags="-s -w" -o frpc ./cmd/frpc
 
       - uses: actions/upload-artifact@v4
         with:
